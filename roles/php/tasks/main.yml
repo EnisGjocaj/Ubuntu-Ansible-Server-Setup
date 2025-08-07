@@ -12,8 +12,18 @@
       - curl
       - composer
     state: present
+    update_cache: yes 
 
-- name: Install Laravel globally
-  shell: composer global require laravel/installer
+- name: Install Laravel globally for appuser
+  become: yes
+  become_user: appuser
+  shell: |
+    export COMPOSER_HOME=$HOME/.config/composer
+    export PATH="$COMPOSER_HOME/vendor/bin:$PATH"
+    composer global require laravel/installer --no-interaction
+  environment:
+    COMPOSER_HOME: "/home/appuser/.config/composer"
+    PATH: "/home/appuser/.config/composer/vendor/bin:/usr/local/bin:/usr/bin:/bin"
   args:
-    creates: /root/.config/composer/vendor/bin/laravel
+    executable: /bin/bash
+    creates: /home/appuser/.config/composer/vendor/bin/laravel
