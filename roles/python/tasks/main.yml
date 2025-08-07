@@ -6,7 +6,23 @@
       - python3-venv
     state: present
 
-- name: Install Django globally
+- name: Create Python virtual environment for Django
+  become: yes
+  become_user: appuser
+  command: python3 -m venv /home/appuser/django-env
+  args:
+    creates: /home/appuser/django-env
+
+- name: Install Django in virtual environment
   pip:
     name: django
-    executable: pip3
+    virtualenv: /home/appuser/django-env
+    virtualenv_command: python3 -m venv
+
+- name: Add virtualenv activate command to .bashrc
+  become: yes
+  become_user: appuser
+  lineinfile:
+    path: /home/appuser/.bashrc
+    line: 'source ~/django-env/bin/activate'
+    insertafter: EOF
