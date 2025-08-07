@@ -34,25 +34,28 @@ This playbook sets up a secure and ready-to-deploy environment with:
 
 ## 📁 Folder Structure
 
-ansible-server-setup/
-├── inventory.ini # Server IP and SSH user
-├── playbook.yml # Main playbook entry
-├── roles/
-│ ├── common/ # System tools and user setup
-│ ├── nodejs/ # NVM + Node.js + PM2
-│ ├── nginx/
-│ ├── apache/
-│ ├── php/
-│ ├── python/
-│ ├── certbot/
-│ └── ufw/
-├── files/ # Static config files (nginx.conf etc.)
-├── .env # (Optional) For dynamic IP injection
-├── generate_inventory.py # (Optional) Generates inventory.ini from .env
-├── .gitignore
-└── README.md
-
-
+C:.
+├───group_vars
+└───roles
+    ├───apache
+    │   └───tasks
+    ├───common
+    │   └───tasks
+    ├───firewall
+    │   ├───files
+    │   └───tasks
+    ├───nginx
+    │   └───tasks
+    ├───node
+    │   └───tasks
+    ├───php
+    │   └───tasks
+    ├───pm2
+    │   └───tasks
+    ├───python
+    │   └───tasks
+    └───user
+        └───tasks
 
 ---
 
