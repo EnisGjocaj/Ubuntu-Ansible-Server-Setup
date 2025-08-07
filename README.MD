@@ -33,7 +33,7 @@ This playbook sets up a secure and ready-to-deploy environment with:
 ---
 
 ## 📁 Folder Structure
-
+```
 C:.
 ├───group_vars
 └───roles
@@ -56,100 +56,65 @@ C:.
     │   └───tasks
     └───user
         └───tasks
-
+```
 ---
 
 ## 🚀 How to Use
 
 ### 1. 📥 Clone the Repository
 
-``bash
+```bash
 git clone https://github.com/your-org/ansible-server-setup.git
-cd ansible-server-setup
+cd ansible-server-setup 
+```
 
-## 2. 🖊️ Edit the Inventory File
+### 2. 🖊️ Edit the Inventory File
 
 Open or create the misssing `inventory.ini` as we have the example samle format, and set your server IP and SSH user:
 
-``ini
+```ini
 [web]
 your.server.ip.here ansible_user=root
+```
 
-Absolutely! Here's the section you want, fully formatted as Markdown:
+### 2. 🖊️ Edit the Inventory File
 
-md
+Open or create the missing `inventory.ini` as we have the example sample format, and set your server IP and SSH user:
 
-Copy
+```ini
+[web]
+your.server.ip.here ansible_user=root
+```
 
-Edit
 
-\## 2. 🖊️ Edit the Inventory File
+### Then generate the inventory:
 
-Open \`inventory.ini\` and set your server IP and SSH user:
-
-\`\`\`ini
-
-\[web\]
-
-your.server.ip.here ansible\_user=root
-
-Or use the optional .env + script method:
-
-env
-
-Copy
-
-Edit
-
-\# .env
-
-SERVER\_IP=your.server.ip.here
-
-Then generate the inventory:
-
-bash
-
-Copy
-
-Edit
 
 python3 generate\_inventory.py
-
-3\. 🔐 Ensure SSH Access
+```
+### 3. 🔐 Ensure SSH Access
 
 Make sure your SSH key is added to your agent and you're able to SSH into the server:
 
-bash
-
-Copy
-
-Edit
-
+```
 ssh root@your.server.ip.here
+```
 
-4\. 🧪 Dry Run (Optional)
+### 4. 🧪 Dry Run (Optional)
 
 Run a dry-run check before applying:
 
-bash
-
-Copy
-
-Edit
-
+```
 ansible-playbook playbook.yml -i inventory.ini --check --diff
+```
 
-5\. ⚙️ Run the Playbook
+### 5. ⚙️ Run the Playbook
 
 To apply the full server setup:
 
-bash
-
-Copy
-
-Edit
-
+```
 ansible-playbook playbook.yml -i inventory.ini
+```
 
 🧠 Tips
 
