@@ -3,13 +3,26 @@
     name: apache2
     state: present
 
-- name: Ensure Apache2 is running
-  service:
-    name: apache2
-    state: started
-    enabled: true
+- name: Change Apache to listen on port 8080
+  lineinfile:
+    path: /etc/apache2/ports.conf
+    regexp: '^Listen 80'
+    line: 'Listen 8080'
+  notify: restart apache2
 
 - name: Create Apache test frontend site
   copy:
     dest: /var/www/html/index.html
     content: "<html><body><h1>Apache test site</h1></body></html>"
+
+- name: Ensure Apache2 is running and enabled
+  service:
+    name: apache2
+    state: started
+    enabled: true
+
+handlers:
+  - name: restart apache2
+    service:
+      name: apache2
+      state: restarted
