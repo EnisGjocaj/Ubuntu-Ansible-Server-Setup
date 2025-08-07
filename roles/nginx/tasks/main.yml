@@ -1,0 +1,56 @@
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Ensure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Create test frontend directory
+  file:
+    path: /var/www/test-frontend
+    state: directory
+    mode: '0755'
+
+- name: Create test index.html
+  copy:
+    dest: /var/www/test-frontend/index.html
+    content: "<html><body><h1>Hello from Test Frontend</h1></body></html>"
+
+- name: Create test Nginx site config
+  copy:
+    dest: /etc/nginx/sites-available/test-frontend
+    content: |
+      server {
+          listen 80;
+          server_name test.dolphins.pro www.test.dolphins.pro;
+
+          root /var/www/test-frontend;
+          index index.html;
+
+          location / {
+              try_files $uri /index.html;
+          }
+      }
+
+- name: Enable test Nginx site
+  file:
+    src: /etc/nginx/sites-available/test-frontend
+    dest: /etc/nginx/sites-enabled/test-frontend
+    state: link
+    force: yes
+
+- name: Install Certbot
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Reload Nginx
+  service:
+    name: nginx
+    state: reloaded

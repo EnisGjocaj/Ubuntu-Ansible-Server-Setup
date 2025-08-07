@@ -1,0 +1,12 @@
+- name: Add appuser
+  user:
+    name: appuser
+    shell: /bin/bash
+    groups: sudo
+    create_home: yes
+
+- name: Set authorized key for appuser
+  authorized_key:
+    user: appuser
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

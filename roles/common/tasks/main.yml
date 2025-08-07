@@ -1,0 +1,14 @@
+- name: Update & upgrade the system
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install essential tools
+  apt:
+    name:
+      - curl
+      - git
+      - ufw
+      - unzip
+      - build-essential
+    state: present

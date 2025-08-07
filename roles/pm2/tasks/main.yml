@@ -1,0 +1,12 @@
+- name: Install PM2 globally as appuser
+  become: true
+  become_user: appuser
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source "$NVM_DIR/nvm.sh"
+    nvm use 22
+    npm install -g pm2
+    pm2 startup
+    pm2 save
+  args:
+    executable: /bin/bash

@@ -1,0 +1,19 @@
+- name: Install PHP and dependencies
+  apt:
+    name:
+      - php
+      - php-cli
+      - php-mbstring
+      - php-xml
+      - php-curl
+      - php-mysql
+      - php-zip
+      - unzip
+      - curl
+      - composer
+    state: present
+
+- name: Install Laravel globally
+  shell: composer global require laravel/installer
+  args:
+    creates: /root/.config/composer/vendor/bin/laravel

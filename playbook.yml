@@ -1,0 +1,14 @@
+- name: Setup Ubuntu Server
+  hosts: web
+  become: true
+
+  roles:
+    - common
+    - user
+    - node
+    - pm2
+    - nginx
+    - php
+    - python
+    - apache
+    - firewall

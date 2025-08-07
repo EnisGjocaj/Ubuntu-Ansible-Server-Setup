@@ -1,0 +1,12 @@
+- name: Install NVM and Node.js 22 as appuser
+  become: true
+  become_user: appuser
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    source "$NVM_DIR/nvm.sh"
+    nvm install 22
+    nvm use 22
+    nvm alias default 22
+  args:
+    executable: /bin/bash

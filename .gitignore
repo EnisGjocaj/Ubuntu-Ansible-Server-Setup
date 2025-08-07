@@ -1,0 +1,6 @@
+__pycache__/
+*.retry
+*.log
+*.zip
+*.tar.gz
+inventory.ini
