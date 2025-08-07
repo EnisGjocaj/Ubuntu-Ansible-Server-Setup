@@ -70,15 +70,6 @@ cd ansible-server-setup
 
 ### 2. 🖊️ Edit the Inventory File
 
-Open or create the misssing `inventory.ini` as we have the example samle format, and set your server IP and SSH user:
-
-```ini
-[web]
-your.server.ip.here ansible_user=root
-```
-
-### 2. 🖊️ Edit the Inventory File
-
 Open or create the missing `inventory.ini` as we have the example sample format, and set your server IP and SSH user:
 
 ```ini
@@ -86,10 +77,9 @@ Open or create the missing `inventory.ini` as we have the example sample format,
 your.server.ip.here ansible_user=root
 ```
 
-
 ### Then generate the inventory:
 
-
+```
 python3 generate\_inventory.py
 ```
 ### 3. 🔐 Ensure SSH Access
