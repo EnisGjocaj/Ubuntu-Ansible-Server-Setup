@@ -134,20 +134,6 @@ Use .gitignore to exclude credentials or secrets.
 
 📬 Contact
 
-Made with ❤️ by \[Your Name or Team\]
+Enis Gjocaj
 
 For questions, feel free to open an issue or email us.
-
-Let me know if you want it branded with your org name (e.g., Dolphins Group) or your GitHub URL.
-
-yaml
-
-Copy
-
-Edit
-
-\---
-
-You can copy-paste this directly into your README.md, and it will render perfectly on GitHub or any Markdown viewer.
-
-Want me to generate the entire README this way?
