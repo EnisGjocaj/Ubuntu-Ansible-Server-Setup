@@ -63,7 +63,7 @@ C:.
 
 ### 1. 📥 Clone the Repository
 
-```bash
+``bash
 git clone https://github.com/your-org/ansible-server-setup.git
 cd ansible-server-setup
 
@@ -71,7 +71,7 @@ cd ansible-server-setup
 
 Open or create the misssing `inventory.ini` as we have the example samle format, and set your server IP and SSH user:
 
-```ini
+``ini
 [web]
 your.server.ip.here ansible_user=root
 
