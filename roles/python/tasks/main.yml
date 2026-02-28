@@ -21,7 +21,7 @@
 
 - name: Add virtualenv activate command to .bashrc
   become: yes
-  become_user: appuser
+  become_user: appuser NGINX, 
   lineinfile:
     path: /home/appuser/.bashrc
     line: 'source ~/django-env/bin/activate'

@@ -1,0 +1,33 @@
+- name: Set Supabase CLI version
+  set_fact:
+    supabase_version: "2.34.3"
+    supabase_deb_url: "https://github.com/supabase/cli/releases/download/v{{ supabase_version }}/supabase_{{ supabase_version }}_linux_amd64.deb"
+    supabase_deb_path: "/tmp/supabase_{{ supabase_version }}_linux_amd64.deb"
+
+- name: Download Supabase CLI .deb
+  get_url:
+    url: "{{ supabase_deb_url }}"
+    dest: "{{ supabase_deb_path }}"
+    mode: '0644'
+
+- name: Install Supabase CLI
+  apt:
+    deb: "{{ supabase_deb_path }}"
+    state: present
+  become: true
+
+- name: Fix missing dependencies after .deb install
+  apt:
+    update_cache: yes
+    upgrade: yes
+    state: latest
+  become: true
+
+- name: Ensure Supabase CLI is installed
+  command: supabase --version
+  register: supabase_cli_version
+  changed_when: false
+
+- name: Show Supabase CLI version
+  debug:
+    msg: "Supabase CLI version: {{ supabase_cli_version.stdout }}"

@@ -1,0 +1,89 @@
+
+  - name: Remove broken Docker repo (Ubuntu Noble issue)
+    file:
+      path: /etc/apt/sources.list.d/docker.list
+      state: absent
+
+  
+  - name: Clean apt cache
+    command: apt-get clean
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+
+  - name: Install prerequisites
+    apt:
+      name:
+        - curl
+        - xz-utils
+        - tar
+        - iptables
+        - git
+        - procps
+      state: present
+      update_cache: yes
+
+  - name: Download Docker binaries
+    get_url:
+      url: https://download.docker.com/linux/static/stable/x86_64/docker-25.0.4.tgz
+      dest: /tmp/docker.tgz
+      mode: '0644'
+
+  - name: Extract Docker binaries
+    unarchive:
+      src: /tmp/docker.tgz
+      dest: /usr/local/bin/
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+
+  - name: Ensure docker group exists
+    group:
+      name: docker
+      state: present
+
+  - name: Add current user to docker group
+    user:
+      name: "{{ ansible_user }}"
+      groups: docker
+      append: yes
+
+  - name: Create systemd service for Docker
+    copy:
+      dest: /etc/systemd/system/docker.service
+      content: |
+        [Unit]
+        Description=Docker Application Container Engine
+        Documentation=https://docs.docker.com
+        After=network-online.target firewalld.service containerd.service
+        Wants=network-online.target
+
+        [Service]
+        ExecStart=/usr/local/bin/dockerd
+        ExecReload=/bin/kill -s HUP $MAINPID
+        Restart=always
+        LimitNOFILE=infinity
+        LimitNPROC=infinity
+        LimitCORE=infinity
+        TimeoutStartSec=0
+
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: Reload systemd
+    command: systemctl daemon-reexec
+
+  - name: Enable and start Docker service
+    systemd:
+      name: docker
+      enabled: yes
+      state: started
+
+  - name: Verify Docker installation
+    command: docker --version
+    register: docker_version
+    changed_when: false
+
+  - name: Show Docker version
+    debug:
+      msg: "Docker installed successfully: {{ docker_version.stdout }}"

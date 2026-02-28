@@ -1,0 +1,6 @@
+- name: Cleanup VPS for fresh Ansible setup
+  hosts: web
+  become: true
+
+  roles:
+    - cleanup

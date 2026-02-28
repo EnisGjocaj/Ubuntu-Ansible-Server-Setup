@@ -5,8 +5,13 @@
     groups: sudo
     create_home: yes
 
+# - name: Set authorized key for appuser
+#   authorized_key:
+#     user: appuser
+#     state: present
+#     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 - name: Set authorized key for appuser
   authorized_key:
     user: appuser
     state: present
-    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    key: "{{ lookup('file', '/home/enis/.ssh/enisgjocaj_key.pub') }}"

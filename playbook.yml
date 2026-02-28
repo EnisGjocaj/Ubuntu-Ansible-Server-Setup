@@ -12,3 +12,5 @@
     - python
     - apache
     - firewall
+    - docker 
+    - supabase_cli

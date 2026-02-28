@@ -1,0 +1,107 @@
+    # --- Stop and Remove Nginx ---
+    - name: Stop Nginx if running
+      service:
+        name: nginx
+        state: stopped
+      ignore_errors: true
+
+    - name: Remove Nginx sites
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_fileglob:
+        - /etc/nginx/sites-enabled/*
+        - /etc/nginx/sites-available/*
+
+    - name: Remove Nginx test directories
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /var/www/test-frontend
+        - /var/www/html/index.html
+
+    - name: Uninstall Nginx
+      apt:
+        name: nginx
+        state: absent
+        purge: yes
+
+    # --- Stop and Remove Apache ---
+    - name: Stop Apache if running
+      service:
+        name: apache2
+        state: stopped
+      ignore_errors: true
+
+    - name: Uninstall Apache2
+      apt:
+        name: apache2
+        state: absent
+        purge: yes
+
+    # --- Remove PHP & Composer/Laravel ---
+    - name: Uninstall PHP and composer
+      apt:
+        name:
+          - php
+          - php-cli
+          - php-mbstring
+          - php-xml
+          - php-curl
+          - php-mysql
+          - php-zip
+          - composer
+        state: absent
+        purge: yes
+
+    - name: Remove Laravel installer
+      file:
+        path: /home/appuser/.config/composer
+        state: absent
+
+    # --- Remove Node.js, NVM, PM2 ---
+    - name: Remove NVM & Node.js
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /home/appuser/.nvm
+        - /home/appuser/.npm
+
+    - name: Remove PM2 directory
+      file:
+        path: /home/appuser/.pm2
+        state: absent
+
+    - name: Kill PM2 processes
+      shell: pm2 kill
+      become_user: appuser
+      ignore_errors: true
+
+    # --- Remove Python/Django Env ---
+    - name: Remove Django virtual environment
+      file:
+        path: /home/appuser/django-env
+        state: absent
+
+    # --- Remove App Directories (your manual projects) ---
+    - name: Remove old app deployments
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /home/appuser/Crypto-Drone-Backend
+        - /home/appuser/Crypto-Drone-Frontend
+        - /home/appuser/backend
+        - /home/appuser/dealflo-backend
+
+    # --- Cleanup packages cache ---
+    - name: Autoremove unused packages
+      apt:
+        autoremove: yes
+        purge: yes
+
+    - name: Clean apt cache
+      apt:
+        autoclean: yes
