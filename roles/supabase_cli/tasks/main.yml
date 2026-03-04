@@ -1,6 +1,9 @@
 - name: Set Supabase CLI version
   set_fact:
     supabase_version: "2.34.3"
+
+- name: Build Supabase paths
+  set_fact:
     supabase_deb_url: "https://github.com/supabase/cli/releases/download/v{{ supabase_version }}/supabase_{{ supabase_version }}_linux_amd64.deb"
     supabase_deb_path: "/tmp/supabase_{{ supabase_version }}_linux_amd64.deb"
 
