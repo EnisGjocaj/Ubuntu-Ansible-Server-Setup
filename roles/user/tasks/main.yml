@@ -14,4 +14,4 @@
   authorized_key:
     user: appuser
     state: present
-    key: "{{ lookup('file', '/home/enis/.ssh/polymarket_id_rsa.pub') }}"
+    key: "{{ lookup('file', '/home/enis/.ssh/polymarket_new_id_rsa.pub') }}"

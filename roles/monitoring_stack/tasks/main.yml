@@ -1,0 +1,100 @@
+---
+- name: Monitoring stack disabled (skip)
+  debug:
+    msg: "monitoring_stack_enabled=false; skipping monitoring_stack role"
+  when: not (monitoring_stack_enabled | default(false) | bool)
+  changed_when: false
+
+- name: Mark monitoring stack enabled
+  debug:
+    msg: "monitoring_stack_enabled=true; installing Prometheus + Grafana"
+  when: monitoring_stack_enabled | default(false) | bool
+  changed_when: false
+
+- name: Install docker-compose standalone (v2) if missing
+  get_url:
+    url: "{{ monitoring_docker_compose_url }}"
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+  become: true
+  when:
+    - monitoring_stack_enabled | default(false) | bool
+    - monitoring_install_docker_compose | default(true) | bool
+
+- name: Create monitoring directory
+  file:
+    path: "{{ monitoring_stack_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  when: monitoring_stack_enabled | default(false) | bool
+
+- name: Create grafana provisioning directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - "{{ monitoring_stack_dir }}/grafana/provisioning/datasources"
+    - "{{ monitoring_stack_dir }}/grafana/provisioning/dashboards"
+  become: true
+  when: monitoring_stack_enabled | default(false) | bool
+
+- name: Deploy Prometheus config
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ monitoring_stack_dir }}/prometheus.yml"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: monitoring_stack_enabled | default(false) | bool
+
+- name: Deploy Grafana datasource provisioning
+  copy:
+    dest: "{{ monitoring_stack_dir }}/grafana/provisioning/datasources/datasource.yml"
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus:9090
+          isDefault: true
+  become: true
+  when: monitoring_stack_enabled | default(false) | bool
+
+- name: Deploy docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ monitoring_stack_dir }}/docker-compose.yml"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: monitoring_stack_enabled | default(false) | bool
+
+- name: Pull and start monitoring stack
+  shell: |
+    set -e
+    docker-compose pull
+    docker-compose up -d
+  args:
+    chdir: "{{ monitoring_stack_dir }}"
+    executable: /bin/bash
+  become: true
+  when: monitoring_stack_enabled | default(false) | bool
+
+- name: Show monitoring endpoints
+  debug:
+    msg:
+      - "Prometheus: http://{{ ansible_host | default(inventory_hostname) }}:{{ monitoring_prometheus_port }}"
+      - "Grafana: http://{{ ansible_host | default(inventory_hostname) }}:{{ monitoring_grafana_port }} (admin/{{ monitoring_grafana_admin_password }})"
+  when: monitoring_stack_enabled | default(false) | bool

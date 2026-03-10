@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: "polymarket_executor"
+    static_configs:
+      - targets:
+{% if monitoring_polymarket_targets is defined and monitoring_polymarket_targets | length > 0 %}
+{% for t in monitoring_polymarket_targets %}
+          - "{{ t }}"
+{% endfor %}
+{% else %}
+          - "127.0.0.1:9109"
+{% endif %}

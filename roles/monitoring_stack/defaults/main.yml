@@ -1,0 +1,14 @@
+---
+monitoring_stack_enabled: false
+
+monitoring_stack_dir: /opt/monitoring
+
+monitoring_prometheus_port: 9090
+monitoring_grafana_port: 3000
+monitoring_grafana_admin_password: "admin"
+
+monitoring_install_docker_compose: true
+monitoring_docker_compose_url: "https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64"
+
+# List of scrape targets (host:port strings) for polymarket metrics exporters
+monitoring_polymarket_targets: []
