@@ -3,6 +3,8 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - "{{ monitoring_stack_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
       - prometheus_data:/prometheus

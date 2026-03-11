@@ -11,8 +11,14 @@ scrape_configs:
       - targets:
 {% if monitoring_polymarket_targets is defined and monitoring_polymarket_targets | length > 0 %}
 {% for t in monitoring_polymarket_targets %}
+{% if t.startswith('127.0.0.1:') %}
+          - "host.docker.internal:{{ t.split(':')[1] }}"
+{% elif t.startswith('localhost:') %}
+          - "host.docker.internal:{{ t.split(':')[1] }}"
+{% else %}
           - "{{ t }}"
+{% endif %}
 {% endfor %}
 {% else %}
-          - "127.0.0.1:9109"
+          - "host.docker.internal:9109"
 {% endif %}
